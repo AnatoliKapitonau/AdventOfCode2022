@@ -9,9 +9,8 @@ public class AdventOfCodeMain {
     public static void main(String[] args) {
         LocalDateTime now = LocalDateTime.now();
 
-        AoC.builder(now.getYear(), 1)
+        AoC.builder(now.getYear(), now.getDayOfMonth())
                 .oneDayOnly()
-//        .sampleInput("test.txt")
                 .build().run();
 
     }

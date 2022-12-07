@@ -40,3 +40,5 @@ atlassian-ide-plugin.xml
 *.log
 
 /.idea/
+/src/main/resources/input/
+/src/main/resources/results/

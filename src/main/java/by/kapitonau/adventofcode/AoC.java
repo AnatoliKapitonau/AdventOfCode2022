@@ -1,24 +1,20 @@
 package by.kapitonau.adventofcode;
 
-import by.kapitonau.adventofcode.utils.DisplayUtil;
-import by.kapitonau.adventofcode.utils.FileUtil;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-
-import java.io.*;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.Arrays;
-
-import static by.kapitonau.adventofcode.utils.DisplayUtil.*;
+import static by.kapitonau.adventofcode.utils.DisplayUtil.GREEN;
+import static by.kapitonau.adventofcode.utils.DisplayUtil.GREY;
+import static by.kapitonau.adventofcode.utils.DisplayUtil.RED;
+import static by.kapitonau.adventofcode.utils.DisplayUtil.RESET;
 import static java.lang.String.format;
 
-@Slf4j
+import by.kapitonau.adventofcode.utils.DisplayUtil;
+import by.kapitonau.adventofcode.utils.FileUtil;
+import java.io.*;
+import java.lang.reflect.*;
+import java.net.*;
+import java.nio.file.*;
+import java.util.Arrays;
+import org.apache.commons.lang3.StringUtils;
+
 public class AoC {
 
     public static final double NS_TO_MS = 1 / 1_000_000D;
@@ -47,7 +43,7 @@ public class AoC {
 
     public void run() {
         // template idea from https://github.com/mrbdahlem/Advent-of-Code
-        log.info("\u001b[0m\033[2J\033[HAdvent of Code " + this.year);
+        System.out.println("\u001b[0m\033[2J\033[HAdvent of Code " + this.year);
 
         int today = this.day;
         int maxDay = today;
@@ -66,14 +62,14 @@ public class AoC {
         }
 
         // Display the runtime for all days that have been run
-        log.info(DisplayUtil.prefixColorBold(GREY) + "Total runtime: " + format("%,12.2f ms", (totalTime) * NS_TO_MS));
+        System.out.println(DisplayUtil.prefixColorBold(GREY) + "Total runtime: " + format("%,12.2f ms", (totalTime) * NS_TO_MS));
     }
 
     private void displayHeader(int day) {
         for (int i = 0; i < 30; i++) {
-            log.info(DisplayUtil.prefixColor(RED) + "*" + DisplayUtil.prefixColor(GREEN) + "*");
+            System.out.print(DisplayUtil.prefixColor(RED) + "*" + DisplayUtil.prefixColor(GREEN) + "*");
         }
-        log.info("\n" + DisplayUtil.prefixColor(RESET) + "Day " + day + ":");
+        System.out.println("\n" + DisplayUtil.prefixColor(RESET) + "Day " + day + ":");
     }
 
     private Result runDay(int day) {
@@ -103,7 +99,7 @@ public class AoC {
             result.part2Time = System.nanoTime() - startTime;
 
         } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            log.error("Could not execute day " + day + ". " + e.getLocalizedMessage());
+            System.err.println("Could not execute day " + day + ". " + e.getLocalizedMessage());
             e.printStackTrace();
         }
         return result;
@@ -113,7 +109,7 @@ public class AoC {
         try {
             return fileContents(INPUT_PATH + year + "/sample/" + this.sampleInput);
         } catch (IOException e) {
-            log.error(e.getLocalizedMessage());
+            System.err.println(e.getLocalizedMessage());
             e.printStackTrace();
             System.exit(1);
             return "";
@@ -142,11 +138,11 @@ public class AoC {
         // Attempt to load the input file if it is already downloaded
         File inputFile = new File(filename);
         if (inputFile.exists()) {
-            log.info("Using cached input from " + filename);
+            System.out.println("Using cached input from " + filename);
             try {
                 return fileContents(filename);
             } catch (IOException e) {
-                log.error(e.getLocalizedMessage());
+                System.err.println(e.getLocalizedMessage());
                 e.printStackTrace();
                 System.exit(1);
             }
@@ -159,8 +155,7 @@ public class AoC {
         // authorization
         String cookie = System.getenv("SESSION");
         if (cookie == null) {
-            log.error("You need to set SESSION cookie in .env file.");
-
+            System.err.println("You need to set SESSION cookie in .env file.");
             throw new RuntimeException("Need to set SESSION cookie in .env file.");
         }
 
@@ -169,7 +164,7 @@ public class AoC {
             // Create parent directories as necessary for input file
             inputFile.getParentFile().mkdirs();
 
-            log.info("Downloading input data for " + year + " day " + day);
+            System.out.println("Downloading input data for " + year + " day " + day);
             URL url = new URL("https://adventofcode.com/" + year + "/day/" + day + "/input");
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
@@ -179,11 +174,11 @@ public class AoC {
             int status = con.getResponseCode();
 
             if (status > 299) {
-                log.info("Connection status " + status + " downloading input for " + year + " day " + day);
+                System.out.println("Connection status " + status + " downloading input for " + year + " day " + day);
                 try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getErrorStream()))) {
                     String inputLine;
                     while ((inputLine = in.readLine()) != null) {
-                        log.info(inputLine);
+                        System.out.println(inputLine);
                     }
                     System.exit(0);
                 }
@@ -200,10 +195,10 @@ public class AoC {
                         ps.println(inputLine);
                     }
                 }
-                log.info("Input data saved to " + filename);
+                System.out.println("Input data saved to " + filename);
             }
         } catch (Exception e) {
-            log.error(String.valueOf(e));
+            System.err.println(e);
             System.exit(0);
         }
         return data.toString();
@@ -255,8 +250,8 @@ public class AoC {
                     StandardOpenOption.APPEND,
                     StandardOpenOption.CREATE);
         } catch (IOException e) {
-            log.error("Could not append to " + filename);
-            log.error(String.valueOf(e));
+            System.err.println("Could not append to " + filename);
+            System.err.println(e);
         }
     }
 
@@ -286,17 +281,17 @@ public class AoC {
         }
 
         public void display() {
-            log.info(DisplayUtil.prefixColor("RED") + "Part 1: > " + part1Result + " < " + (part1Unique ? "" : "REPEATED RESPONSE"));
-            log.info(DisplayUtil.prefixColor("GREEN") + "Part 2: > " + part2Result + " < " + (part2Unique ? "" : "REPEATED RESPONSE"));
+            System.out.println(DisplayUtil.prefixColor("RED") + "Part 1: > " + part1Result + " < " + (part1Unique ? "" : "REPEATED RESPONSE"));
+            System.out.println(DisplayUtil.prefixColor("GREEN") + "Part 2: > " + part2Result + " < " + (part2Unique ? "" : "REPEATED RESPONSE"));
         }
 
         public void displayTiming() {
-            log.info(DisplayUtil.prefixColor("GREY") + "--- Prep:   ");
-            log.info(F_MS_N, (prepTime) * NS_TO_MS);
-            log.info(DisplayUtil.prefixColor("RED") + "--- Part 1: ");
-            log.info(F_MS_N, (part1Time) * NS_TO_MS);
-            log.info(DisplayUtil.prefixColor("GREEN") + "--- Part 2: ");
-            log.info(F_MS_N, (part2Time) * NS_TO_MS);
+            System.out.print(DisplayUtil.prefixColor("GREY") + "--- Prep:   ");
+            System.out.printf(F_MS_N, (prepTime) * NS_TO_MS);
+            System.out.print(DisplayUtil.prefixColor("RED") + "--- Part 1: ");
+            System.out.printf(F_MS_N, (part1Time) * NS_TO_MS);
+            System.out.print(DisplayUtil.prefixColor("GREEN") + "--- Part 2: ");
+            System.out.printf(F_MS_N, (part2Time) * NS_TO_MS);
         }
     }
 
@@ -332,5 +327,4 @@ public class AoC {
             return new AoC(year, day, onlyToday, sampleInput, displayOutput);
         }
     }
-
 }
