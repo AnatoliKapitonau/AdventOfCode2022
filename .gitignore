@@ -27,16 +27,16 @@ buildNumber.properties
 ##############################
 ## IntelliJ
 ##############################
-out/
-.idea/
-.idea_modules/
 *.iml
 *.ipr
 *.iws
+.idea
+out
+test-output
+atlassian-ide-plugin.xml
+
 
 # Log file
 *.log
 
-# BlueJ files
-*.ctxt
 /.idea/
