@@ -1,4 +1,4 @@
-package by.kapitonau.advent.day;
+package by.kapitonau.advent.days;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
