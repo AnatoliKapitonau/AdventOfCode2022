@@ -7,11 +7,11 @@ public class AdventOfCodeMain {
 
     @SneakyThrows
     public static void main(String[] args) {
-        LocalDateTime now = LocalDateTime.now();
+        var now = LocalDateTime.now();
 
         AoC.builder(now.getYear(), now.getDayOfMonth())
                 .oneDayOnly()
-                .build().run();
-
+                .build()
+                .run();
     }
 }
